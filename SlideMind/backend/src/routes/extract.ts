@@ -4,6 +4,7 @@ import path from 'path';
 import { extractPDF } from '../services/pdfExtractor';
 import { extractPPTX } from '../services/pptxExtractor';
 import { demoSlides } from '../data/demoData';
+import { hasGarbledText, GARBLED_TEXT_WARNING } from '../services/textQuality';
 
 const router = Router();
 
@@ -61,7 +62,8 @@ router.post('/', upload.single('file'), async (req: Request, res: Response): Pro
         fileSize,
         slides,
         totalSlides: slides.length,
-        isDemo: false
+        isDemo: false,
+        warning: hasGarbledText(slides) ? GARBLED_TEXT_WARNING : undefined
       });
     } catch (extractError) {
       console.error('Extraction failed, returning demo:', extractError);

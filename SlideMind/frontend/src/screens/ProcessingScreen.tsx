@@ -7,7 +7,7 @@ interface ProcessingScreenProps {
   file: File | null;
   isDemo: boolean;
   options: SummaryOptions;
-  onComplete: (slides: SlideData[], result: SummaryResult) => void;
+  onComplete: (slides: SlideData[], result: SummaryResult, extractWarning?: string) => void;
   onError: (error: string) => void;
 }
 
@@ -54,6 +54,7 @@ const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
         setStatusText('Đang đọc và giải nén file...');
 
         let slides: SlideData[] = [];
+        let extractWarning: string | undefined;
 
         if (isDemo) {
           await delay(700);
@@ -63,6 +64,7 @@ const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
           try {
             const extractResult = await extractSlides(file);
             slides = extractResult.slides;
+            extractWarning = extractResult.warning;
           } catch (err) {
             // Fallback to demo on extract error
             console.warn('Extract failed, using demo:', err);
@@ -114,7 +116,7 @@ const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
         setStatusText('Hoàn thành!');
         await delay(400);
 
-        onComplete(slides, result);
+        onComplete(slides, result, extractWarning);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Lỗi không xác định';
         console.error('Processing error:', err);

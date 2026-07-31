@@ -25,6 +25,7 @@ const initialState: AppState = {
 function App() {
   const [state, setState] = useState<AppState>(initialState);
   const [error, setError] = useState<string | null>(null);
+  const [extractWarning, setExtractWarning] = useState<string | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
@@ -65,7 +66,8 @@ function App() {
   };
 
   // Screen 3 → 4: Processing complete
-  const handleProcessingComplete = (slides: SlideData[], result: SummaryResult) => {
+  const handleProcessingComplete = (slides: SlideData[], result: SummaryResult, warning?: string) => {
+    setExtractWarning(warning || null);
     update({
       extractedSlides: slides,
       summaryResult: result,
@@ -88,6 +90,7 @@ function App() {
   const handleUploadNew = () => {
     setState(initialState);
     setError(null);
+    setExtractWarning(null);
   };
 
   // Upload → Chat mode
@@ -200,6 +203,7 @@ function App() {
       {state.currentStep === 4 && state.summaryResult && (
         <ResultsScreen
           result={state.summaryResult}
+          extractWarning={extractWarning}
           onReSummarize={handleReSummarize}
           onUploadNew={handleUploadNew}
         />
