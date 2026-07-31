@@ -7,31 +7,39 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 
 ## §1. User & Job
 
-- **Job executor:** [TODO - NHÓM XÁC NHẬN] — ứng viên hợp lý dựa trên README hiện tại: "học viên ôn trước quiz" hoặc "học viên nghỉ buổi" (từ danh sách vai trò cụ thể ở `01-de-bai.md`/`02-guide.md §1.1`). Không dùng "học viên nói chung".
+- **Job executor:** Học viên VLearn đang học một khoá có slide bài giảng dài, cần tự tóm tắt/tra cứu lại nội dung mà không đọc lại toàn bộ tài liệu — cụ thể là nhóm học viên đã chủ động gõ lệnh "tóm tắt" hoặc hỏi định nghĩa thuật ngữ ngay trong lúc dùng trợ giảng AI của VLearn (bằng chứng mining bên dưới), không phải "học viên nói chung".
 - **Core JTBD** (không tên sản phẩm/AI trong câu):
-  [TODO - NHÓM VIẾT] — nháp: "Khi vừa học xong một buổi, tôi muốn nắm lại nhanh những gì quan trọng trong slide mà không phải đọc lại từ đầu, để tôi ôn tập hiệu quả trước khi quên." — nhóm tự kiểm bằng câu hỏi "bỏ AI đi, việc đó còn tồn tại không?" trước khi chốt.
+  > "Khi slide bài giảng quá dài để đọc lại từ đầu, tôi muốn có ngay phần tóm tắt đúng trọng tâm và lời giải thích thuật ngữ khó bám sát đúng nội dung đã học, để tôi nắm lại kiến thức nhanh mà không bỏ sót hoặc hiểu sai."
+  Kiểm bằng câu hỏi "bỏ AI đi, việc đó còn tồn tại không?": có — trước khi có trợ giảng AI, học viên vẫn phải tự đọc lại slide/note để tóm tắt, chỉ là chậm hơn và dễ bỏ sót; AI thay đổi tốc độ và độ tin cậy của việc đó, không tạo ra nhu cầu mới.
 - **Problem statement** (KHÔNG chữ AI):
-  [TODO - NHÓM VIẾT] — dựa theo README hiện tại: "Sinh viên thường mất nhiều thời gian đọc lại toàn bộ slide sau buổi học." Cần cụ thể hoá: ai, mất bao lâu, hậu quả gì nếu không ôn kịp (ví dụ: điểm quiz thấp, quên kiến thức trước kỳ thi).
-- **Evidence** (chuẩn A và/hoặc B — log đầy đủ trong repo):
-  - Số liệu mining / kết quả khảo sát (n = ?, % xác nhận): **[TODO - CHƯA CÓ — bắt buộc trước 23:59 N1]**
-  - ≥5 quote/ví dụ nguyên văn + nguồn: **[TODO - CHƯA CÓ]**
-
-  Gợi ý nguồn bằng chứng có sẵn trong `data/vlearn-pack/`:
-  - **Đường B (mining):** `chatlog/chat_history_anonymized_for_hackathon.csv` (2.522 dòng hội thoại thật học viên × AI tutor) — đọc `chatlog/DATA_DICTIONARY.md` trước, tìm pattern như "hỏi lại nội dung đã học", "hỏi giải thích thuật ngữ", "hỏi tóm tắt buổi Y" để đếm tần suất và trích ≥5 ví dụ nguyên văn.
-  - **Đường A (khảo sát):** hỏi ≥20 bạn học "lần gần nhất bạn cần xem lại một đoạn bài giảng, bạn làm gì? mất bao lâu?" (theo đúng mẫu câu hỏi ở `02-guide.md §1.3`, tránh hỏi ý kiến kiểu có/không).
+  Học viên VLearn xử lý một lượng lớn nội dung slide mỗi buổi; khi cần tóm tắt lại hoặc tra định nghĩa một thuật ngữ, cách duy nhất là tự dò lại toàn bộ slide/note — tốn thời gian và dễ trích sai ý do nhớ nhầm ngữ cảnh gốc, đặc biệt với thuật ngữ kỹ thuật (ví dụ: "MoE parameter có phải hyperparameter không?" — case #8 trong `eval/golden-set.md`, lấy từ nhu cầu thật quan sát được trong chatlog).
+- **Evidence** (đường B — mining, log đầy đủ trong `data/vlearn-pack/chatlog/`):
+  - **Nguồn:** `chatlog/chat_history_anonymized_for_hackathon.csv` — 1.261 tin nhắn học viên thật (585 hội thoại, 369 user, 22/07–29/07/2026, xem `DATA_DICTIONARY.md`).
+  - **Phương pháp:** quét regex trên phần lệnh/câu hỏi thực sự gõ của học viên (tách riêng khỏi đoạn slide trích dẫn kèm theo trong `content`, để không đếm nhầm từ khoá xuất hiện trong đoạn slide được bôi đen chứ không phải trong câu hỏi) — chi tiết phương pháp, bảng đầy đủ và script tái chạy được tại `evidence/mining-chatlog.md` + `evidence/mine_chatlog.py`.
+  - **Số liệu:** **244/1.261 tin nhắn học viên (19,3%)** chứa lệnh "tóm tắt" hoặc hỏi định nghĩa thuật ngữ/khái niệm hoặc yêu cầu ôn lại — chạm **194/585 hội thoại (33,2%)** và **151/369 học viên (40,9%)** trong 8 ngày dữ liệu. 54 học viên lặp lại hành vi này ≥2 lần (không phải tò mò một lần).
+  - **≥5 quote nguyên văn** (mã tin nhắn/hội thoại để truy nguồn):
+    1. `M0332/C0018`: "tóm tắt toàn bộ slide sau đó đưa ra các ý chính"
+    2. `M2504/C0020`: "tóm tắt hết slice trong vài câu đi"
+    3. `M2134/C0031`: "tóm tắt các chủ đề chính của slide day05-lecture-slides-batch03.pdf này"
+    4. `M2104/C0469`: "hãy bắt đầu cuộc trò chuyện mới quên các câu hỏi cũ của tôi đi, hãy tóm tắt lại những ý quan trọng trong tài liệu"
+    5. `M1739/C0015`: "Designt Pattern ReAct là gì có lưu ý gì về nó?"
+    6. `M1612/C0033`: "agent la gi"
+  - **Giới hạn bằng chứng cần nêu trung thực:** theo `DATA_DICTIONARY.md`, `conversation_mode` trong file này là **100% `in_class`** — tức toàn bộ 1.261 tin nhắn là học viên hỏi **trong lúc học**, không phải sau buổi học. Dữ liệu này chứng minh nhu cầu "tóm tắt + giải thích thuật ngữ" có thật và tần suất cao, nhưng **chưa trực tiếp chứng minh** nhu cầu đó lặp lại đúng ở thời điểm "sau buổi học" mà JTBD của SlideMind nhắm tới — đây là suy luận hợp lý (job tương tự, khác thời điểm) chứ chưa phải bằng chứng đo trực tiếp. Khảo sát bổ sung (đường A, ≥20 học viên, câu hỏi mẫu ở `02-guide.md §1.3`) cần làm nếu muốn xác nhận đúng thời điểm trước CP5.
 
 ## §2. Impact & quyết định chọn
 
-- Bảng impact ≥3 ứng viên (bao nhiêu người · tần suất · tốn gì mỗi lần · khả thi): **[TODO - NHÓM ĐIỀN]**
+- Bảng impact 3 ứng viên, cùng đo trên đúng bộ 1.261 tin nhắn học viên / 585 hội thoại / 369 user (`data/vlearn-pack/chatlog/`, mining regex trên phần câu hỏi thực sự gõ, đã tách khỏi đoạn slide trích dẫn đi kèm):
 
   | Ứng viên | Bao nhiêu người gặp | Tần suất | Tốn gì mỗi lần | Build nổi trong sự kiện? | Chọn? |
   |---|---|---|---|---|---|
-  | Tóm tắt + Chat hỏi-đáp slide (đã build) | ? | ? | ? phút / lần | Có (đã có) | ? |
-  | [ứng viên 2] | ? | ? | ? | ? | ? |
-  | [ứng viên 3] | ? | ? | ? | ? | ? |
+  | **Tóm tắt + Chat hỏi-đáp khái niệm/thuật ngữ trên slide (đã build)** | 151/369 user (40,9%) | 244/1.261 tin nhắn (19,3%), chạm 194/585 hội thoại (33,2%); 54 user lặp lại ≥2 lần | Không đo trực tiếp thời gian tiết kiệm được (chưa có A/B); theo README hiện tại, học viên tự mô tả "mất nhiều thời gian đọc lại toàn bộ slide" | Có (đã có — mock+working, xem §4) | **Chọn** |
+  | Giải thích tại chỗ 1 đoạn bôi đen cụ thể | 160/369 user (43,4%) | 363/1.261 tin nhắn (28,8%) — nhóm lệnh đơn lẻ lớn nhất trong toàn bộ log | N/A | N/A — **đã có sẵn** trong VLearn tutor hiện tại | Loại |
+  | Tạo ví dụ minh hoạ theo yêu cầu | 27/369 user (7,3%) | 38/1.261 tin nhắn (3,0%) | — | Khả thi về kỹ thuật (thêm 1 loại prompt) | Loại |
 
-- Ứng viên ĐÃ LOẠI + vì sao: **[TODO - NHÓM ĐIỀN]**
-- Ứng viên CHỌN + vì sao (bằng số): **[TODO - NHÓM ĐIỀN]**
+- **Ứng viên ĐÃ LOẠI + vì sao:**
+  - *Giải thích tại chỗ 1 đoạn bôi đen*: tần suất thật cao nhất trong log (28,8%) nhưng **không phải cơ hội mới** — VLearn tutor đã phục vụ đúng job này (chọn đoạn text → hỏi). SlideMind khác biệt có chủ đích ở lát cắt rộng hơn: tóm tắt/hỏi-đáp trên **toàn bộ tài liệu** kèm trích dẫn `[Slide N]` bấm được để tự kiểm, thay vì chỉ 1 đoạn tại 1 thời điểm.
+  - *Tạo ví dụ minh hoạ*: tần suất quá thấp (3,0%, n=38) so với ứng viên được chọn (19,3%, n=244) — chưa tới 1/6 — không đủ bằng chứng để ưu tiên trong 1,5 ngày build.
+- **Ứng viên CHỌN + vì sao (bằng số):** Tóm tắt + Chat hỏi-đáp — tần suất cao nhất trong các ứng viên **thực sự là cơ hội mới** (19,3% tin nhắn, chạm 40,9% user trong 8 ngày dữ liệu, có lặp lại hành vi ở 54 user) và trực tiếp khớp 2 tính năng đầu của README (Tóm tắt toàn bài + Từ khoá quan trọng).
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 
@@ -134,3 +142,5 @@ Với mỗi sản phẩm, trả lời:
 | 2026-07-31 | Thêm tính năng Chat AI Agent (hỏi-đáp tự do có trích dẫn), song song với luồng Tóm tắt tự động sẵn có | Mở rộng từ tóm tắt cố định sang tương tác linh hoạt hơn theo yêu cầu người dùng |
 | 2026-07-31 | Sửa model Gemini mặc định (`gemini-1.5-flash` → `gemini-flash-latest`) | Model cũ đã bị Google ngừng hỗ trợ, gây lỗi 404 khi gọi AI thật |
 | 2026-07-31 | Dựng golden set 20 case (`eval/golden-set.md`) + chạy lượt 1 (`eval/run-01-results.md`), hoàn thành yêu cầu CP3 | 19/20 case đạt, phát hiện rủi ro quota free-tier Gemini (20 req/ngày) cần xử lý trước demo |
+| 2026-07-31 | Thêm phát hiện lỗi phông chữ (`backend/src/services/textQuality.ts`) khi trích xuất PDF, hiển thị cảnh báo ở `ResultsScreen.tsx` thay vì fallback demo âm thầm | Đúng rủi ro #2 đã ghi ở spec.md §5 — `warning` field có sẵn từ backend nhưng frontend chưa từng hiển thị |
+| 2026-07-31 | Điền §1-§2 bằng số liệu mining thật từ chatlog VLearn (244/1.261 tin nhắn = 19,3%, chạm 151/369 user) thay cho TODO | Đáp ứng yêu cầu bằng chứng bắt buộc trước khi dựng demo-slides.pdf; phương pháp + script tại `evidence/` |

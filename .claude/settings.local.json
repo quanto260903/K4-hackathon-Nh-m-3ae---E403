@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(PYTHONIOENCODING=utf-8 python mine_chatlog5.py)",
+      "Bash(echo \"exit: $?\")",
+      "mcp__claude_ai_Canva__create-design-from-candidate",
+      "mcp__claude_ai_Canva__read-design",
+      "mcp__claude_ai_Canva__edit-design"
     ]
   }
 }
