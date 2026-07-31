@@ -69,7 +69,7 @@ export async function summarizeSlides(
   }
 }
 
-export async function checkHealth(): Promise<{ hasApiKey: boolean; status: string }> {
+export async function checkHealth(): Promise<{ hasApiKey: boolean; status: string; provider?: string; requestedProvider?: string }> {
   try {
     const response = await apiClient.get('/api/health');
     return response.data;

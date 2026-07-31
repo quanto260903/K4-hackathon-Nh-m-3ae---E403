@@ -1,18 +1,21 @@
 import { Router, Request, Response } from 'express';
+import { getActiveAiProvider } from '../services/summarizer';
 
 const router = Router();
 
 router.get('/', (_req: Request, res: Response) => {
-  const hasApiKey = !!(process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY.trim().length > 0);
+  const activeProvider = getActiveAiProvider();
 
   res.json({
     status: 'ok',
-    hasApiKey,
+    hasApiKey: !!activeProvider,
+    provider: activeProvider?.provider || 'demo',
+    requestedProvider: process.env.AI_PROVIDER || 'auto',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
-    message: hasApiKey
-      ? 'SlideMind AI đang chạy với Claude API'
-      : 'SlideMind AI đang chạy ở chế độ demo'
+    message: activeProvider
+      ? `SlideMind AI dang chay voi ${activeProvider.provider} API`
+      : 'SlideMind AI dang chay o che do demo'
   });
 });
 
