@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import extractRouter from './routes/extract';
 import summarizeRouter from './routes/summarize';
 import healthRouter from './routes/health';
+import chatRouter from './routes/chat';
 import { getActiveAiProvider } from './services/summarizer';
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use('/api/extract', extractRouter);
 app.use('/api/summarize', summarizeRouter);
 app.use('/api/health', healthRouter);
+app.use('/api/chat', chatRouter);
 
 app.get('/', (_req, res) => {
   res.json({
@@ -31,7 +33,8 @@ app.get('/', (_req, res) => {
     endpoints: [
       'POST /api/extract',
       'POST /api/summarize',
-      'GET /api/health'
+      'GET /api/health',
+      'POST /api/chat'
     ]
   });
 });

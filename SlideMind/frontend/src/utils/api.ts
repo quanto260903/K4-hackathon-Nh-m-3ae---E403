@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SlideData, SummaryOptions, SummaryResult } from '../types';
+import { SlideData, SummaryOptions, SummaryResult, ChatMessage } from '../types';
 import { demoSummary, demoSlides } from '../data/demoData';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -75,6 +75,27 @@ export async function checkHealth(): Promise<{ hasApiKey: boolean; status: strin
     return response.data;
   } catch {
     return { hasApiKey: false, status: 'offline' };
+  }
+}
+
+export async function askChatQuestion(
+  slides: SlideData[],
+  history: ChatMessage[],
+  question: string
+): Promise<string> {
+  try {
+    const response = await apiClient.post<{ success: boolean; answer: string }>('/api/chat', {
+      slides,
+      history: history.map(({ role, content }) => ({ role, content })),
+      question
+    });
+    return response.data.answer;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const msg = error.response?.data?.error || error.message;
+      throw new Error(msg);
+    }
+    throw error;
   }
 }
 

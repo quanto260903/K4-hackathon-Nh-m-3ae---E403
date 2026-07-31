@@ -165,7 +165,7 @@ async function callOpenAI(slides: SlideData[], options: SummaryOptions, apiKey: 
 async function callGemini(slides: SlideData[], options: SummaryOptions, apiKey: string): Promise<SummaryResult> {
   const client = new GoogleGenerativeAI(apiKey);
   const model = client.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+    model: process.env.GEMINI_MODEL || 'gemini-flash-latest',
     generationConfig: { responseMimeType: 'application/json' }
   });
   const startTime = Date.now();

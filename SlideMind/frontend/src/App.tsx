@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StepProgress from './components/StepProgress';
 import UploadScreen from './screens/UploadScreen';
 import ConfigScreen from './screens/ConfigScreen';
 import ProcessingScreen from './screens/ProcessingScreen';
 import ResultsScreen from './screens/ResultsScreen';
+import ChatScreen from './screens/ChatScreen';
 import { AppState, defaultSummaryOptions, SlideData, SummaryResult } from './types';
+import { checkHealth, extractSlides, getDemoSlides } from './utils/api';
+import { demoSummary } from './data/demoData';
 
 const initialState: AppState = {
   currentStep: 1,
@@ -12,12 +15,21 @@ const initialState: AppState = {
   isDemo: false,
   extractedSlides: null,
   summaryOptions: defaultSummaryOptions,
-  summaryResult: null
+  summaryResult: null,
+  chatMode: false,
+  chatSlides: null,
+  chatFilename: '',
+  hasApiKey: null
 };
 
 function App() {
   const [state, setState] = useState<AppState>(initialState);
   const [error, setError] = useState<string | null>(null);
+  const [chatLoading, setChatLoading] = useState(false);
+
+  useEffect(() => {
+    checkHealth().then(h => update({ hasApiKey: h.hasApiKey }));
+  }, []);
 
   const update = (partial: Partial<AppState>) => {
     setState(prev => ({ ...prev, ...partial }));
@@ -78,8 +90,52 @@ function App() {
     setError(null);
   };
 
+  // Upload → Chat mode
+  const handleStartChat = async (file: File | null, isDemo: boolean) => {
+    setError(null);
+    setChatLoading(true);
+    try {
+      if (isDemo) {
+        const result = await getDemoSlides();
+        update({ chatSlides: result.slides, chatFilename: demoSummary.lectureTitle, chatMode: true });
+      } else if (file) {
+        const result = await extractSlides(file);
+        update({ chatSlides: result.slides, chatFilename: result.filename.replace(/\.(pdf|pptx)$/i, ''), chatMode: true });
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Lỗi không xác định';
+      setError(`Không thể tải slide: ${msg}`);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  // Chat mode → Upload
+  const handleExitChat = () => {
+    setState(prev => ({ ...initialState, hasApiKey: prev.hasApiKey }));
+    setError(null);
+  };
+
+  if (state.chatMode && state.chatSlides) {
+    return (
+      <ChatScreen
+        slides={state.chatSlides}
+        lectureTitle={state.chatFilename || 'Bài giảng'}
+        hasApiKey={!!state.hasApiKey}
+        onBack={handleExitChat}
+      />
+    );
+  }
+
   return (
     <div className="font-sans">
+      {chatLoading && (
+        <div className="fixed inset-0 z-50 bg-[#102a43] bg-opacity-90 flex flex-col items-center justify-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-white border-t-transparent animate-spin" />
+          <p className="text-white text-sm">Đang tải slide cho phiên trò chuyện...</p>
+        </div>
+      )}
+
       {/* Show step progress bar on steps 2, 3, 4 */}
       {state.currentStep > 1 && (
         <div className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
@@ -112,6 +168,8 @@ function App() {
         <UploadScreen
           onFileSelected={handleFileSelected}
           onDemoSelected={handleDemoSelected}
+          onStartChat={handleStartChat}
+          hasApiKey={state.hasApiKey}
         />
       )}
 

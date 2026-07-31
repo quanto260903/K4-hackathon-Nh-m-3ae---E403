@@ -4,15 +4,18 @@ import FileDropzone from '../components/FileDropzone';
 interface UploadScreenProps {
   onFileSelected: (file: File) => void;
   onDemoSelected: () => void;
+  onStartChat: (file: File | null, isDemo: boolean) => void;
+  hasApiKey: boolean | null;
 }
 
 const MAX_SIZE = 20 * 1024 * 1024;
 const ALLOWED_TYPES = ['.pdf', '.pptx'];
 
-const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelected }) => {
+const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelected, onStartChat, hasApiKey }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [isDemoActive, setIsDemoActive] = useState(false);
+  const [mode, setMode] = useState<'summary' | 'chat'>('summary');
 
   const validateAndSetFile = useCallback((file: File) => {
     setIsDemoActive(false);
@@ -38,6 +41,10 @@ const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelec
   };
 
   const handleContinue = () => {
+    if (mode === 'chat') {
+      onStartChat(isDemoActive ? null : selectedFile, isDemoActive);
+      return;
+    }
     if (isDemoActive) {
       onDemoSelected();
     } else if (selectedFile && !fileError) {
@@ -45,7 +52,9 @@ const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelec
     }
   };
 
-  const canContinue = isDemoActive || (selectedFile !== null && fileError === null);
+  const canContinue =
+    (isDemoActive || (selectedFile !== null && fileError === null)) &&
+    !(mode === 'chat' && hasApiKey === false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1e3a5f] via-[#243b53] to-[#102a43] flex items-center justify-center p-4">
@@ -66,6 +75,36 @@ const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelec
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-6">
+          {/* Mode toggle */}
+          <div className="flex p-1 bg-gray-100 rounded-xl mb-5">
+            <button
+              onClick={() => setMode('summary')}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+                mode === 'summary' ? 'bg-white text-[#1e3a5f] shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Tóm tắt tự động
+            </button>
+            <button
+              onClick={() => hasApiKey !== false && setMode('chat')}
+              disabled={hasApiKey === false}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+                hasApiKey === false
+                  ? 'text-gray-300 cursor-not-allowed'
+                  : mode === 'chat'
+                    ? 'bg-white text-purple-600 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              💬 Trò chuyện với AI Agent
+            </button>
+          </div>
+          {mode === 'chat' && hasApiKey === false && (
+            <p className="text-orange-600 text-xs mb-4 -mt-3 bg-orange-50 border border-orange-100 rounded-lg px-3 py-2">
+              Cần cấu hình API key (ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY) trong <code>backend/.env</code> để dùng tính năng Chat AI Agent.
+            </p>
+          )}
+
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Chọn file bài giảng</h2>
 
           <FileDropzone
@@ -127,7 +166,7 @@ const UploadScreen: React.FC<UploadScreenProps> = ({ onFileSelected, onDemoSelec
             `}
           >
             <span className="flex items-center justify-center gap-2">
-              Tiếp tục
+              {mode === 'chat' ? 'Bắt đầu trò chuyện' : 'Tiếp tục'}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

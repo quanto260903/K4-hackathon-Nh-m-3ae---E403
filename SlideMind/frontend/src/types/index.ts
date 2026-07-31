@@ -45,6 +45,12 @@ export interface SummaryResult {
   processingTime?: number;
 }
 
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export interface AppState {
   currentStep: 1 | 2 | 3 | 4;
   uploadedFile: File | null;
@@ -52,6 +58,10 @@ export interface AppState {
   extractedSlides: SlideData[] | null;
   summaryOptions: SummaryOptions;
   summaryResult: SummaryResult | null;
+  chatMode: boolean;
+  chatSlides: SlideData[] | null;
+  chatFilename: string;
+  hasApiKey: boolean | null;
 }
 
 export const defaultSummaryOptions: SummaryOptions = {

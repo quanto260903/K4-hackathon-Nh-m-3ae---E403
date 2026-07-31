@@ -59,3 +59,14 @@ export interface SummarizeRequest {
   options: SummaryOptions;
   isDemo: boolean;
 }
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ChatRequest {
+  slides: SlideData[];
+  history: ChatMessage[];
+  question: string;
+}
