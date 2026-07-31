@@ -1,4 +1,4 @@
-# AI SPEC — SlideMind AI: Chat Agent hỏi-đáp trên slide bài giảng · Nhóm [TODO - NHÓM ĐIỀN Zone/mã nhóm] · Zone [TODO]
+# AI SPEC — SlideMind AI: Chat Agent hỏi-đáp trên slide bài giảng · Nhóm 3ae · Zone C2
 
 Hướng: [ ] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
 > [TODO - NHÓM QUYẾT ĐỊNH] SlideMind giải quyết job "ôn tập sau buổi học bằng slide" — gần với ví dụ tính năng mới của Hướng A (VLearn) nhưng hiện chạy như app độc lập, chưa tích hợp UI bôi-đen-đoạn-để-hỏi của VLearn tutor. Nhóm cần tự chọn: (a) tính là "tính năng mới trên VLearn" nếu định vị SlideMind như module bổ sung, hoặc (b) Hướng C (làn mở) nếu định vị là sản phẩm độc lập. Quyết định này ảnh hưởng tới cách viết §2-3.
@@ -130,6 +130,7 @@ Với mỗi sản phẩm, trả lời:
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về feedback/case nào) |
 |---|---|---|
+| 2026-07-31 | Điền tên nhóm (Nhóm 3ae) và Zone (C2) vào tiêu đề spec | Hoàn thiện thông tin định danh nhóm cho bản nộp |
 | 2026-07-31 | Thêm tính năng Chat AI Agent (hỏi-đáp tự do có trích dẫn), song song với luồng Tóm tắt tự động sẵn có | Mở rộng từ tóm tắt cố định sang tương tác linh hoạt hơn theo yêu cầu người dùng |
 | 2026-07-31 | Sửa model Gemini mặc định (`gemini-1.5-flash` → `gemini-flash-latest`) | Model cũ đã bị Google ngừng hỗ trợ, gây lỗi 404 khi gọi AI thật |
 | 2026-07-31 | Dựng golden set 20 case (`eval/golden-set.md`) + chạy lượt 1 (`eval/run-01-results.md`), hoàn thành yêu cầu CP3 | 19/20 case đạt, phát hiện rủi ro quota free-tier Gemini (20 req/ngày) cần xử lý trước demo |
