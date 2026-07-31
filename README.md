@@ -1,5 +1,15 @@
 # Mini Hackathon AI — Batch 03
 
+## Thành viên và phân công
+
+| Mã học viên | Họ và tên | Phân công |
+|---|---|---|
+| 2A202601680 | Tô Minh Quân | Phụ trách backend và tích hợp AI: xử lý PDF/PPTX, xây dựng API tóm tắt và hỏi đáp, tích hợp Gemini, kiểm tra health route và xử lý lỗi provider. |
+| 2A202601018 | Sái Hồng Anh | Phụ trách frontend và tích hợp hệ thống: giao diện tải file, màn hình cấu hình, hiển thị kết quả tóm tắt, giao diện chat theo bài giảng và kết nối frontend với backend. |
+| 2A202601852 | Lê Khả Chính | Phụ trách nghiên cứu và kiểm thử: phân tích chatlog làm bằng chứng, xây dựng tình huống khó và nguyên tắc thiết kế AI, kiểm thử đầu ra, hoàn thiện README và nội dung thuyết trình/demo. |
+
+Cả ba thành viên cùng tham gia xác định vấn đề, thiết kế giải pháp, kiểm thử luồng hoàn chỉnh và chuẩn bị phần trình bày sản phẩm.
+
 **SPEC → Prototype → Demo.** Đây không phải cuộc thi code — đây là cuộc thi **tư duy sản phẩm AI**.
 
 - Thời lượng: **1,5 ngày** (một ngày build + một buổi demo)
